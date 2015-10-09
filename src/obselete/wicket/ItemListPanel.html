@@ -1,0 +1,40 @@
+<html>
+<body>
+<wicket:panel>
+    <table width="100%">
+        <tr>
+            <td>
+                <span wicket:id="count"><a class="fa fa-search" href="#"><font face="sans-serif"><span
+                        wicket:id="count"></span> <span wicket:id="recordsFound"></span></font></a></span>&nbsp;
+                        <span wicket:id="pagination" class="page-links">
+                            <span wicket:id="prevOn"><a href="#" wicket:id="prevOn"></a></span><span
+                                wicket:id="prevOff"></span>&nbsp;
+                            <span wicket:id="pages">
+                                <span wicket:id="pageOn"><a href="#" wicket:id="pageOn"></a></span><span
+                                    wicket:id="pageOff"></span>&nbsp;
+                            </span><span wicket:id="nextOn"><a href="#" wicket:id="nextOn"></a></span><span
+                                wicket:id="nextOff"></span>
+                        </span>
+            </td>
+            <td wicket:id="export" align="right">
+                <a class="fa fa-share" href="#"><font face="sans-serif">&nbsp;
+                    <wicket:message key="item_list.exportToExcel"/>
+                </font></a>
+            </td>
+        </tr>
+    </table>
+    <table width="100%">
+        <tr>
+            <th wicket:id="headings"><span wicket:id="heading"><a href="#" wicket:id="heading"></a></span></th>
+        </tr>
+        <tr wicket:id="itemList">
+            <td wicket:id="columns"><span wicket:id="column"></span></td>
+        </tr>
+    </table>
+</wicket:panel>
+<wicket:fragment wicket:id="refId"><a href="#" wicket:id="refId"><span wicket:id="refId"></span></a><span
+        wicket:id="index"></span></wicket:fragment>
+<wicket:fragment wicket:id="detail"><span wicket:id="attachment"></span><span wicket:id="detail"></span>
+</wicket:fragment>
+</body>
+</html>

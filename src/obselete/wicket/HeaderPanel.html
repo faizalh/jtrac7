@@ -1,0 +1,51 @@
+<wicket:panel>
+    <div class="container">
+        <nav class="nav-bar nav-bar-default navbar-static-top">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="nav-brand" href="#" wicket:id="dashboard">
+                    TOBIAS
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li>
+                    <a wicket:id="dashboard" wicket:message="title:header.dashboard">
+                        <i class="fa fa-dashboard fa-fw"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" wicket:id="space">
+                        <i class="fa fa-globe">
+                            <font face="sans-serif">
+                                <span wicket:id="space"></span>
+                            </font>
+                        </i>
+                    </a>
+                </li>
+                <li><a wicket:id="new" class="fa fa-file-o" href="#" wicket:message="title:header.new"></a></li>
+                <li><a wicket:id="search" href="#" wicket:message="title:header.search"><i class="fa fa-search"></i></a>
+                </li>
+            </ul>
+            <ul class="nav navbar-top-links navbar-right">
+                <li><a wicket:id="options" class="fa fa-gear" href="#" wicket:message="title:header.options"></a></li>
+                <li><a wicket:id="logout" class="fa fa-sign-out" href="#" wicket:message="title:header.logout"></a></li>
+                <li><a wicket:id="login" class="fa fa-sign-in" href="#" wicket:message="title:header.login"></a></li>
+                <li>
+                    <span wicket:id="user">
+                        <i class="fa fa-user">
+                            <font face="sans-serif">
+                                <span wicket:id="user"></span>
+                            </font>
+                        </i>
+                    </span>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</wicket:panel>       
