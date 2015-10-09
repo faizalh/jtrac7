@@ -15,7 +15,15 @@ public class ItemItem {
     private int type;
     private Item item;
     private Item relatedItem;
+    public ItemItem() {
+        // zero arg constructor
+    }
 
+    public ItemItem(Item item, Item relatedItem, int type) {
+        this.item = item;
+        this.relatedItem = relatedItem;
+        this.type = type;
+    }
     // this returns i18n keys
     public static String getRelationText(int type) {
         if (type == RELATED) {

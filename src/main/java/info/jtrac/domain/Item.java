@@ -114,6 +114,15 @@ public class Item extends AbstractItem {
     public List<Field> getEditableFieldList(User user) {
         return user.getEditableFieldList(space, getStatus());
     }
+
+    public void addRelated(Item relatedItem, int relationType) {
+        if (getRelatedItems() == null) {
+            setRelatedItems(new LinkedHashSet<ItemItem>());
+        }
+        ItemItem itemItem = new ItemItem(this, relatedItem, relationType);
+        getRelatedItems().add(itemItem);
+    }
+
     /*
     @Override
     public boolean equals(Object o) {

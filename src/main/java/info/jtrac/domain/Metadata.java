@@ -237,6 +237,11 @@ public class Metadata {
 
     }
 
+    @Transient
+    public int getStateCount() {
+        return states.size();
+    }
+
     public void addRole(String roleName) {
         Role role = new Role(roleName);
         for (Map.Entry<Integer, String> entry : states.entrySet()) {
@@ -261,6 +266,30 @@ public class Metadata {
     public void removeRole(String roleName) {
         // important! this has to be combined with a database update
         roles.remove(roleName);
+    }
+
+    @Transient
+    public int getRoleCount() {
+        return roles.size();
+    }
+
+    public void switchMask(int stateKey, String roleKey, String fieldName) {
+        State state = getRoleState(roleKey, stateKey);
+        Field.Name tempName = Field.convertToName(fieldName);
+        Integer mask = state.getFields().get(tempName);
+        switch (mask) {
+            // case State.MASK_HIDDEN: state.getFields().put(name, State.MASK_READONLY); return; HIDDEN support in future
+            case State.MASK_READONLY:
+                state.getFields().put(tempName, State.MASK_OPTIONAL);
+                return;
+            case State.MASK_OPTIONAL:
+                state.getFields().put(tempName, State.MASK_MANDATORY);
+                return;
+            case State.MASK_MANDATORY:
+                state.getFields().put(tempName, State.MASK_READONLY);
+                return;
+            default: // should never happen
+        }
     }
 
     // customized accessor

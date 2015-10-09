@@ -177,7 +177,7 @@ public class JtracTest extends JtracTestBase {
         jtrac.storeUser(user);
         long id = jdbcTemplate.queryForLong("select id from user_space_roles where space_id = " + spaceId);
         UserSpaceRole usr = jtrac.loadUserSpaceRole(id);
-        assertEquals(spaceId, usr.getSpace().getId());
+        assertEquals(spaceId, usr.getSpace().getId().longValue());
         jtrac.removeUserSpaceRole(usr);
         //endTransaction();
         assertEquals(0, jdbcTemplate.queryForInt("select count(0) from user_space_roles where space_id = " + spaceId));
