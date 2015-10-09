@@ -223,7 +223,7 @@ public class User implements UserDetails {
     }
 
     @Transient
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         // grant full access only if not a Guest
         if (id > 0) {
