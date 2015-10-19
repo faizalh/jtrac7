@@ -27,7 +27,7 @@ public class UserSpaceRole implements GrantedAuthority {
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public Long getId() {
         return id;
@@ -77,19 +77,27 @@ public class UserSpaceRole implements GrantedAuthority {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UserSpaceRole that = (UserSpaceRole) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-
-        return true;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof UserSpaceRole)) {
+            return false;
+        }
+        final UserSpaceRole usr = (UserSpaceRole) o;
+        return (
+                (space == usr.getSpace() || space.equals(usr.getSpace()))
+                        && user.equals(usr.getUser())
+                        && roleKey.equals(usr.getRoleKey())
+        );
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        int hash = 7;
+        hash = hash * 31 + user.hashCode();
+        hash = hash * 31 + (space == null ? 0 : space.hashCode());
+        hash = hash * 31 + roleKey.hashCode();
+        return hash;
     }
 
     @Transient

@@ -91,7 +91,7 @@ public interface JtracDao {
     void storeSpaceSequence(SpaceSequence spaceSequence);
 
     //===========================================
-    void storeUser(User user);
+    User storeUser(User user);
 
     User loadUser(long id);
 

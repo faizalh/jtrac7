@@ -12,26 +12,26 @@ import java.util.*;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-    private Long id;
+    private long id;
     private String type;
     private String loginName;
     private String name;
     private String password;
     private String email;
     private String locale;
-    private Boolean locked;
+    private boolean locked;
     private User parent;
     private Metadata metadata;
-    private Collection<UserSpaceRole> userSpaceRoles;
+    private Collection<UserSpaceRole> userSpaceRoles = new HashSet<UserSpaceRole>();
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -97,13 +97,10 @@ public class User implements UserDetails {
 
     @Basic
     @Column(name = "locked")
-    public Boolean getLocked() {
+    public boolean getLocked() {
         return locked;
     }
 
-    public void setLocked(Boolean locked) {
-        this.locked = locked;
-    }
 
     @ManyToOne
     @JoinColumn(name = "parent")
@@ -137,6 +134,26 @@ public class User implements UserDetails {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
+        final User u = (User) o;
+        return u.getLoginName().equals(loginName);
+    }
+
+    @Override
+    public int hashCode() {
+        if(loginName == null) {
+            return 0;
+        }
+        return loginName.hashCode();
+    }
+    /**
+    @Override
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -151,7 +168,7 @@ public class User implements UserDetails {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
-
+**/
     //---
     //=============================================================
 
@@ -247,11 +264,11 @@ public class User implements UserDetails {
 
     @Transient
     public boolean isLocked() {
-        return locked.booleanValue();
+        return locked;
     }
 
     public void setLocked(boolean locked) {
-        this.locked = Boolean.valueOf(locked);
+        this.locked = locked;
     }
 
     /**

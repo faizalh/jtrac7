@@ -17,7 +17,6 @@
 package info.jtrac.domain;
 
 import info.jtrac.util.DateUtils;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
@@ -478,7 +477,7 @@ public abstract class AbstractItem implements Serializable {
     //=======================================================================
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return id;
     }

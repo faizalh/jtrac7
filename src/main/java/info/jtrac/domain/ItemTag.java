@@ -13,7 +13,7 @@ public class ItemTag {
     private Tag tag;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public Long getId() {
         return id;

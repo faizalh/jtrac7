@@ -20,13 +20,15 @@ import info.jtrac.JtracDao;
 import info.jtrac.domain.*;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.HibernateCallback;
+import org.springframework.orm.hibernate5.HibernateTemplate;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -35,6 +37,7 @@ import java.util.List;
  * DAO Implementation using Spring Hibernate template
  * note usage of the Spring "init-method" and "destroy-method" options
  */
+@Transactional
 public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -117,7 +120,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
 
     public void storeMetadata(Metadata metadata) {
 
-        getHibernateTemplate().merge(metadata);
+        //getHibernateTemplate().merge(metadata);
+        Session session = getSessionFactory().openSession();
+        session.setFlushMode(FlushMode.AUTO);
+        session.merge(metadata);
     }
 
     public Metadata loadMetadata(long id) {
@@ -166,14 +172,22 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         getHibernateTemplate().delete(space);
     }
 
-    public void storeUser(User user) {
+    @Transactional(readOnly = false)
+    public User storeUser(User user) {
+    //TODO clean me up.
+        Session session = getSessionFactory().openSession();
+        session.setFlushMode(FlushMode.AUTO);
 
-        getHibernateTemplate().merge(user);
+        session.merge(user);
+        return user;
     }
 
     public User loadUser(long id) {
 
-        return (User) getHibernateTemplate().get(User.class, id);
+        //return (User) getHibernateTemplate().get(User.class, id);
+        Session session = getSessionFactory().openSession();
+        User ret = (User)session.get("User", id);
+        return ret;
     }
 
     public void removeUser(User user) {
@@ -197,7 +211,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
 
     public List<User> findUsersByLoginName(String loginName) {
-        return (List<User>) getHibernateTemplate().find("from User user where user.loginName = ?", loginName);
+        //return (List<User>) getHibernateTemplate().find("from User user where user.loginName = ?", loginName);
+        Session session = getSessionFactory().getCurrentSession();
+        List ret = session.createQuery("select user from info.jtrac.domain.User user").list();
+        return ret;
     }
 
     public List<User> findUsersByEmail(String email) {
@@ -300,14 +317,14 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
 
     public int loadCountOfRecordsHavingFieldNotNull(Space space, Field field) {
-        Criteria criteria = getSession().createCriteria(Item.class);
+        Criteria criteria = getSessionFactory().openSession().createCriteria(Item.class);
         criteria.add(Restrictions.eq("space", space));
         criteria.add(Restrictions.isNotNull(field.getName().toString()));
         criteria.setProjection(Projections.rowCount());
         int itemCount = (Integer) criteria.list().get(0);
         // even when no item has this field not null currently, items may have history with this field not null
         // because of the "parent" difference, cannot use AbstractItem and have to do a separate Criteria query
-        criteria = getSession().createCriteria(History.class);
+        criteria = getSessionFactory().openSession().createCriteria(History.class);
         criteria.createCriteria("parent").add(Restrictions.eq("space", space));
         criteria.add(Restrictions.isNotNull(field.getName().toString()));
         criteria.setProjection(Projections.rowCount());
@@ -325,14 +342,14 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
 
     public int loadCountOfRecordsHavingFieldWithValue(Space space, Field field, int optionKey) {
-        Criteria criteria = getSession().createCriteria(Item.class);
+        Criteria criteria = getSessionFactory().openSession().createCriteria(Item.class);
         criteria.add(Restrictions.eq("space", space));
         criteria.add(Restrictions.eq(field.getName().toString(), optionKey));
         criteria.setProjection(Projections.rowCount());
         int itemCount = (Integer) criteria.list().get(0);
         // even when no item has this field value currently, items may have history with this field value
         // because of the "parent" difference, cannot use AbstractItem and have to do a separate Criteria query
-        criteria = getSession().createCriteria(History.class);
+        criteria = getSessionFactory().openSession().createCriteria(History.class);
         criteria.createCriteria("parent").add(Restrictions.eq("space", space));
         criteria.add(Restrictions.eq(field.getName().toString(), optionKey));
         criteria.setProjection(Projections.rowCount());
@@ -352,14 +369,14 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
 
     public int loadCountOfRecordsHavingStatus(Space space, int status) {
-        Criteria criteria = getSession().createCriteria(Item.class);
+        Criteria criteria = getSessionFactory().openSession().createCriteria(Item.class);
         criteria.add(Restrictions.eq("space", space));
         criteria.add(Restrictions.eq("status", status));
         criteria.setProjection(Projections.rowCount());
         int itemCount = (Integer) criteria.list().get(0);
         // even when no item has this status currently, items may have history with this status
         // because of the "parent" difference, cannot use AbstractItem and have to do a separate Criteria query
-        criteria = getSession().createCriteria(History.class);
+        criteria = getSessionFactory().openSession().createCriteria(History.class);
         criteria.createCriteria("parent").add(Restrictions.eq("space", space));
         criteria.add(Restrictions.eq("status", status));
         criteria.setProjection(Projections.rowCount());
@@ -411,7 +428,8 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
      */
     public void createSchema() {
         try {
-            getHibernateTemplate().find("from Item item where item.id = 1");
+            final List list = getSessionFactory().openSession().createQuery("from Item item where item.id = 1").list();
+            //getHibernateTemplate().find("from Item item where item.id = 1");
         } catch (Exception e) {
             logger.warn("expected database schema does not exist, will create. Error is: " + e.getMessage());
             schemaHelper.createSchema();

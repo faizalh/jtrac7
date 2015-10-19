@@ -402,8 +402,8 @@ public class JtracImpl implements Jtrac {
         return users.get(0);
     }
 
-    public void storeUser(User user) {
-        dao.storeUser(user);
+    public User storeUser(User user) {
+        return dao.storeUser(user);
     }
 
     public void storeUser(User user, String password, boolean sendNotifications) {

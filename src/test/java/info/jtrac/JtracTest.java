@@ -42,11 +42,11 @@ public class JtracTest extends JtracTestBase {
         //assertTrue(!p1.equals(p2));
         assertNotSame(p1, p2);
     }
-    
+    @Test
     public void testEncodeClearTextPassword() {
         assertEquals("21232f297a57a5a743894a0e4a801fc3", jtrac.encodeClearText("admin"));
     }
-    
+
     public void testMetadataInsertAndLoad() {
         Metadata m1 = getMetadata();
         jtrac.storeMetadata(m1);
@@ -56,12 +56,12 @@ public class JtracTest extends JtracTestBase {
         Map<Field.Name, Field> fields = m2.getFields();
         assertTrue(fields.size() == 2);
     }
-    
+    @Test
     public void testUserInsertAndLoad() {
         User user = new User();
         user.setLoginName("test");
         user.setEmail("test@jtrac.com");
-        jtrac.storeUser(user);
+        user = jtrac.storeUser(user);
         User user1 = jtrac.loadUser("test");
         assertTrue(user1.getEmail().equals("test@jtrac.com"));
         User user2 = dao.findUsersByEmail("test@jtrac.com").get(0);
@@ -140,7 +140,7 @@ public class JtracTest extends JtracTestBase {
         assertTrue(set.contains("ROLE_USER"));
         assertTrue(set.contains("ROLE_ADMIN"));
     }
-    
+
     public void testItemInsertAndCounts() {
         Space s = getSpace();
         jtrac.storeSpace(s);
@@ -175,12 +175,13 @@ public class JtracTest extends JtracTestBase {
         user.setLoginName("test");
         user.addSpaceWithRole(space, "ROLE_ADMIN");
         jtrac.storeUser(user);
-        long id = jdbcTemplate.queryForLong("select id from user_space_roles where space_id = " + spaceId);
+        long id = jdbcTemplate.queryForObject("select id from user_space_roles where space_id = " + spaceId, Long.class);
         UserSpaceRole usr = jtrac.loadUserSpaceRole(id);
         assertEquals(spaceId, usr.getSpace().getId().longValue());
         jtrac.removeUserSpaceRole(usr);
         //endTransaction();
-        assertEquals(0, jdbcTemplate.queryForInt("select count(0) from user_space_roles where space_id = " + spaceId));
+        Integer result = jdbcTemplate.queryForObject("select count(0) from user_space_roles where space_id = " + spaceId, Integer.class);
+        assertEquals(0,result.intValue());
     }
     
     public void testFindSpacesWhereGuestAllowed() {
@@ -197,10 +198,10 @@ public class JtracTest extends JtracTestBase {
         u.setLoginName("test");
         u.addSpaceWithRole(space, "DEFAULT");
         jtrac.storeUser(u);
-        assertEquals(1, jdbcTemplate.queryForInt("select count(0) from user_space_roles where role_key = 'DEFAULT'"));
+       assertEquals(1, jdbcTemplate.queryForObject("select count(0) from user_space_roles where role_key = 'DEFAULT'", Integer.class).intValue());
         jtrac.bulkUpdateRenameSpaceRole(space, "DEFAULT", "NEWDEFAULT");
-        assertEquals(0, jdbcTemplate.queryForInt("select count(0) from user_space_roles where role_key = 'DEFAULT'"));
-        assertEquals(1, jdbcTemplate.queryForInt("select count(0) from user_space_roles where role_key = 'NEWDEFAULT'"));
+        assertEquals(0, jdbcTemplate.queryForObject("select count(0) from user_space_roles where role_key = 'DEFAULT'", Integer.class).intValue());
+        assertEquals(1, jdbcTemplate.queryForObject("select count(0) from user_space_roles where role_key = 'NEWDEFAULT'", Integer.class).intValue());
     }
     
     public void testGetItemAsHtmlDoesNotThrowException() {

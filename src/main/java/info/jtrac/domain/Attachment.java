@@ -8,19 +8,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = "attachments")
 public class Attachment {
-    private String id;
+    private long id;
     private String fileName;
-    private String filePrefix;
+    private long filePrefix;
     private Attachment previous;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -36,11 +36,11 @@ public class Attachment {
 
     @Basic
     @Column(name = "file_prefix")
-    public String getFilePrefix() {
+    public long getFilePrefix() {
         return filePrefix;
     }
 
-    public void setFilePrefix(String filePrefix) {
+    public void setFilePrefix(long filePrefix) {
         this.filePrefix = filePrefix;
     }
 
@@ -54,20 +54,4 @@ public class Attachment {
         this.previous = previous;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Attachment that = (Attachment) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
 }

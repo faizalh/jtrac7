@@ -1,5 +1,7 @@
 package info.jtrac;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 /**
@@ -7,6 +9,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
  * using the Spring JUnit helper class with the long name, ensures that
  * the applicationContext is only built once
  */
+@ContextConfiguration("file:src/main/webapp/WEB-INF/applicationContext.xml")
 public abstract class JtracTestBase extends AbstractTransactionalJUnit4SpringContextTests {
     
     protected Jtrac jtrac;
@@ -17,11 +20,13 @@ public abstract class JtracTestBase extends AbstractTransactionalJUnit4SpringCon
     }
     
     // magically autowired by Spring JUnit support
+    @Autowired
     public void setDao(JtracDao dao) {
         this.dao = dao;
     }
     
     //  magically autowired by Spring JUnit support
+    @Autowired
     public void setJtrac(Jtrac jtrac) {
         this.jtrac = jtrac;
     }
@@ -29,7 +34,7 @@ public abstract class JtracTestBase extends AbstractTransactionalJUnit4SpringCon
     protected String[] getConfigLocations() {
         return new String[] {
             "file:src/main/webapp/WEB-INF/applicationContext.xml",
-            "file:src/main/webapp/WEB-INF/applicationContext-lucene.xml"
+//            "file:src/main/webapp/WEB-INF/applicationContext-lucene.xml"
         };
     }   
     

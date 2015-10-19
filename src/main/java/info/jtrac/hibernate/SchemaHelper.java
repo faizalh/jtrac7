@@ -16,7 +16,16 @@
 
 package info.jtrac.hibernate;
 
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataBuilder;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.internal.MetadataBuilderImpl;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.boot.registry.internal.StandardServiceRegistryImpl;
+import org.hibernate.boot.spi.MetadataImplementor;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -85,8 +94,27 @@ public class SchemaHelper {
         }
         logger.info("begin database schema creation =========================");
         //new SchemaUpdate(cfg).execute(true, true);
+        new SchemaUpdate(buildMetadataImplementor()).execute(true, true);
 
         logger.info("end database schema creation ===========================");
     }
 
+    private StandardServiceRegistry buildRegistry() {
+        return new StandardServiceRegistryBuilder()
+                .applySetting("hibernate.connection.driver_class", driverClassName)
+                .applySetting("hibernate.connection.url", url)
+                .applySetting("hibernate.connection.username", username)
+                .applySetting("hibernate.connection.password", password)
+                .applySetting("hibernate.dialect", hibernateDialect)
+                .build();
+    }
+
+    private MetadataImplementor buildMetadataImplementor() {
+        MetadataSources sources = new MetadataSources();
+        for (String resource: mappingResources) {
+            sources.addResource(resource);
+        }
+        return new MetadataBuilderImpl(sources, buildRegistry()).build();
+
+    }
 }

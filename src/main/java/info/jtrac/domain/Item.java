@@ -1,5 +1,7 @@
 package info.jtrac.domain;
 
+import org.hibernate.search.annotations.Indexed;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.LinkedHashSet;
