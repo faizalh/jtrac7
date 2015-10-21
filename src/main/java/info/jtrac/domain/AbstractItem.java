@@ -27,6 +27,10 @@ import java.util.Date;
  * this contains the fields that are common to both and persisted
  */
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(
+        name="DISCRIMINATOR"
+)
 public abstract class AbstractItem implements Serializable {
 
     private long id;

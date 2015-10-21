@@ -94,7 +94,8 @@ public class SchemaHelper {
         }
         logger.info("begin database schema creation =========================");
         //new SchemaUpdate(cfg).execute(true, true);
-        new SchemaUpdate(buildMetadataImplementor()).execute(true, true);
+        MetadataImplementor metadataImplementor = buildMetadataImplementor();
+        new SchemaUpdate(metadataImplementor).execute(true, true);
 
         logger.info("end database schema creation ===========================");
     }
@@ -111,9 +112,29 @@ public class SchemaHelper {
 
     private MetadataImplementor buildMetadataImplementor() {
         MetadataSources sources = new MetadataSources();
+        /*
         for (String resource: mappingResources) {
             sources.addResource(resource);
         }
+        */
+        sources.addAnnotatedClassName("info.jtrac.domain.User").
+                addAnnotatedClassName("info.jtrac.domain.Attachment").
+                addAnnotatedClassName("info.jtrac.domain.ColumnHeading").
+                addAnnotatedClassName("info.jtrac.domain.Config").
+                addAnnotatedClassName("info.jtrac.domain.Field").
+                addAnnotatedClassName("info.jtrac.domain.History").
+                addAnnotatedClassName("info.jtrac.domain.Item").
+                addAnnotatedClassName("info.jtrac.domain.AbstractItem").
+                addAnnotatedClassName("info.jtrac.domain.ItemItem").
+                addAnnotatedClassName("info.jtrac.domain.ItemTag").
+                addAnnotatedClassName("info.jtrac.domain.ItemUser").
+                addAnnotatedClassName("info.jtrac.domain.Metadata").
+                addAnnotatedClassName("info.jtrac.domain.Role").
+                addAnnotatedClassName("info.jtrac.domain.Space").
+                addAnnotatedClassName("info.jtrac.domain.SpaceSequence").
+                addAnnotatedClassName("info.jtrac.domain.Tag").
+                addAnnotatedClassName("info.jtrac.domain.UserSpaceRole");
+
         return new MetadataBuilderImpl(sources, buildRegistry()).build();
 
     }

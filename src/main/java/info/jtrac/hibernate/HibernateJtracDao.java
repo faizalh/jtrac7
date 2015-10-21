@@ -175,10 +175,8 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     @Transactional(readOnly = false)
     public User storeUser(User user) {
     //TODO clean me up.
-        Session session = getSessionFactory().openSession();
-        session.setFlushMode(FlushMode.AUTO);
-
-        session.merge(user);
+        //getHibernateTemplate().merge(user);
+        currentSession().update(user);
         return user;
     }
 
