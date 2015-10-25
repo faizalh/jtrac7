@@ -11,10 +11,6 @@ import java.util.List;
  * Created by faizalh on 10/8/15.
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(
-        name="DISCRIMINATOR"
-)
 @Table(name = "items")
 public class Item extends AbstractItem {
 

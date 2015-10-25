@@ -15,6 +15,7 @@ public class ItemItem {
     private int type;
     private Item item;
     private Item relatedItem;
+
     public ItemItem() {
         // zero arg constructor
     }

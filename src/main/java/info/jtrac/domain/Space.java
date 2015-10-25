@@ -18,6 +18,12 @@ public class Space {
     private Metadata metadata;
     private SpaceSequence spaceSequence;
 
+    public Space() {
+        spaceSequence = new SpaceSequence();
+        spaceSequence.setSpace(this);
+        metadata = new Metadata();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -99,7 +105,7 @@ public class Space {
         this.metadata = metadata;
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "space")
     public SpaceSequence getSpaceSequence() {
         return spaceSequence;
     }

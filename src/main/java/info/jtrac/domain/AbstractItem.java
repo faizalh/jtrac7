@@ -26,11 +26,7 @@ import java.util.Date;
  * Abstract class that serves as base for both Item and History
  * this contains the fields that are common to both and persisted
  */
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(
-        name="DISCRIMINATOR"
-)
+@MappedSuperclass
 public abstract class AbstractItem implements Serializable {
 
     private long id;

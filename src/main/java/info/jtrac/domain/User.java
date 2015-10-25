@@ -122,8 +122,8 @@ public class User implements UserDetails {
         this.metadata = metadata;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    //@JoinColumn(name = "user_id")
     public Collection<UserSpaceRole> getUserSpaceRoles() {
         return userSpaceRoles;
     }

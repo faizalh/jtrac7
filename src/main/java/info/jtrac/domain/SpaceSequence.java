@@ -1,5 +1,8 @@
 package info.jtrac.domain;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
 import javax.persistence.*;
 
 /**
@@ -13,6 +16,10 @@ public class SpaceSequence {
     private Space space;
 
     @Id
+    @GeneratedValue(generator="foreign")
+    @GenericGenerator(name="foreign", strategy = "foreign", parameters={
+            @Parameter(name="property", value="space")
+    })
     @Column(name = "id")
     public Long getId() {
         return id;
@@ -32,6 +39,8 @@ public class SpaceSequence {
         this.nextSeqNum = nextSeqNum;
     }
 
+    //@OneToOne(cascade = CascadeType.ALL, mappedBy = "spaceSequence")
+    //@PrimaryKeyJoinColumn
     @OneToOne
     public Space getSpace() {
         return space;

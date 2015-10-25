@@ -223,8 +223,8 @@ public class JtracImpl implements Jtrac {
         // TODO confirm if above does not happen anymore
         dao.storeItem(item);
         writeToFile(fileUpload, attachment);
-        indexer.index(item);
-        indexer.index(history);
+//        indexer.index(item);
+ //       indexer.index(history);
         if (item.isSendNotifications()) {
             mailSender.send(item);
         }
