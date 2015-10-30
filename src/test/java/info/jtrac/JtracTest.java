@@ -2,9 +2,11 @@ package info.jtrac;
 
 import info.jtrac.domain.*;
 import info.jtrac.util.ItemUtils;
+import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.context.transaction.TestTransaction;
 
 import java.util.*;
 
@@ -183,6 +185,16 @@ public class JtracTest extends JtracTestBase {
         //endTransaction();
         //Integer result = jdbcTemplate.queryForObject("select count(0) from user_space_roles where space_id = " + spaceId, Integer.class);
         //assertEquals(0,result.intValue());
+       // TestTransaction.flagForCommit();
+        //TestTransaction.end();
+        //assertFalse(TestTransaction.isActive());
+        ////TestTransaction.start();
+        sessionFactory.getCurrentSession().flush();
+        Integer result = jdbcTemplate.queryForObject("select count(0) from user_space_roles where space_id = " + spaceId, Integer.class);
+        assertEquals(0,result.intValue());
+
+
+
     }
     @Test
     public void testFindSpacesWhereGuestAllowed() {
@@ -227,7 +239,7 @@ public class JtracTest extends JtracTestBase {
         System.out.println(ItemUtils.getAsXml(i).asXML());
     }
     //FH Following test not allowed for abstract class Transactional...(?)
-    //@Test
+    @Test
     public void testDeleteItemThatHasRelatedItems() {
         Space s = getSpace();
         jtrac.storeSpace(s);
@@ -244,6 +256,7 @@ public class JtracTest extends JtracTestBase {
         i0.setStatus(State.CLOSED);
         jtrac.storeItem(i0, null);
         //=======================
+        sessionFactory.getCurrentSession().flush();
         Item i1 = new Item();
         i1.setSpace(s);
         i1.setAssignedTo(u);

@@ -14,7 +14,6 @@ public class History extends AbstractItem {
     private String type;
     private String actualEffort;
     private String comment;
-    private History parent;
     private Attachment attachment;
 
     public History() {
@@ -115,8 +114,8 @@ public class History extends AbstractItem {
         return getParent().getRefId();
     }
 
-    @Override
     @Transient
+    @Override
     public Space getSpace() {
         return getParent().getSpace();
     }

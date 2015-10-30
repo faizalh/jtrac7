@@ -203,10 +203,8 @@ public abstract class AbstractItem implements Serializable {
     }
 
     // must override, History behaves differently from Item
-    @Transient
     public abstract Space getSpace();
 
-    @Transient
     public abstract String getRefId();
 
     public String getCustomValue(Field.Name fieldName) {
@@ -546,8 +544,8 @@ public abstract class AbstractItem implements Serializable {
         this.assignedTo = assignedTo;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "item_id")
+    @OneToMany(mappedBy = "relatedItem")
+    //@JoinColumn(name = "item_id")
     public Collection<ItemItem> getRelatedItems() {
         return relatedItems;
     }
@@ -556,8 +554,8 @@ public abstract class AbstractItem implements Serializable {
         this.relatedItems = relatedItems;
     }
 
-    @OneToMany
-    @JoinColumn(name = "related_item_id")
+    @OneToMany(mappedBy = "item")
+    //@JoinColumn(name = "related_item_id")
     public Collection<ItemItem> getRelatingItems() {
         return relatingItems;
     }

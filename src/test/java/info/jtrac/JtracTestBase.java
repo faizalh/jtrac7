@@ -1,5 +1,6 @@
 package info.jtrac;
 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
@@ -14,6 +15,9 @@ public abstract class JtracTestBase extends AbstractTransactionalJUnit4SpringCon
     
     protected Jtrac jtrac;
     protected JtracDao dao;
+
+    @Autowired
+    protected SessionFactory sessionFactory;
     
     public JtracTestBase() {
         System.setProperty("jtrac.home", "target/home");
