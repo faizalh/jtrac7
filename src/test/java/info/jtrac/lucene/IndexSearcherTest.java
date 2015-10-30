@@ -32,7 +32,7 @@ public class IndexSearcherTest extends TestCase {
     
     public void testFindItemIdsBySearchingWithinSummaryAndDetailFields() throws Exception {       
         Item item = new Item();
-        item.setId(1);
+        item.setId(1L);
         item.setSummary("this is a test summary");
         item.setDetail("the quick brown fox jumped over the lazy dogs");
         Indexer indexer = (Indexer) context.getBean("indexer");

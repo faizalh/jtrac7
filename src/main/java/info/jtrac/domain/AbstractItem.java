@@ -29,7 +29,7 @@ import java.util.Date;
 @MappedSuperclass
 public abstract class AbstractItem implements Serializable {
 
-    private long id;
+    protected Long id;
     private Integer version;
     private Item parent; // slightly different meaning for Item and History
     private String summary;
@@ -203,8 +203,9 @@ public abstract class AbstractItem implements Serializable {
     }
 
     // must override, History behaves differently from Item
+    @Transient
     public abstract Space getSpace();
-
+    @Transient
     public abstract String getRefId();
 
     public String getCustomValue(Field.Name fieldName) {
@@ -476,11 +477,11 @@ public abstract class AbstractItem implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

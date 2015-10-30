@@ -114,8 +114,8 @@ public class History extends AbstractItem {
         return getParent().getRefId();
     }
 
-    @Transient
     @Override
+    @Transient
     public Space getSpace() {
         return getParent().getSpace();
     }
@@ -131,7 +131,6 @@ public class History extends AbstractItem {
         }
         return -1;
     }
-/*
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -148,5 +147,4 @@ public class History extends AbstractItem {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
-    */
 }

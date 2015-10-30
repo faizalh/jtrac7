@@ -48,7 +48,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
 
     public void storeItem(Item item) {
 
-        getHibernateTemplate().merge(item);
+        getHibernateTemplate().saveOrUpdate(item);
     }
 
     public Item loadItem(long id) {
@@ -58,7 +58,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
 
     public void storeHistory(History history) {
 
-        getHibernateTemplate().merge(history);
+        getHibernateTemplate().saveOrUpdate(history);
     }
 
     public History loadHistory(long id) {
@@ -112,12 +112,12 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
 
     public void storeAttachment(Attachment attachment) {
 
-        getHibernateTemplate().merge(attachment);
+        getHibernateTemplate().saveOrUpdate(attachment);
     }
     @Transactional
     public void storeMetadata(Metadata metadata) {
 
-        //getHibernateTemplate().merge(metadata);
+        //getHibernateTemplate().saveOrUpdate(metadata);
         getHibernateTemplate().saveOrUpdate(metadata);
 
     }
@@ -129,7 +129,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     @Transactional
     public void storeSpace(Space space) {
 
-        //getHibernateTemplate().merge(space);
+        //getHibernateTemplate().saveOrUpdate(space);
         getHibernateTemplate().saveOrUpdate(space);
     }
 
@@ -172,7 +172,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     @Transactional(readOnly = false)
     public User storeUser(User user) {
     //TODO clean me up.
-        //getHibernateTemplate().merge(user);
+        //getHibernateTemplate().saveOrUpdate(user);
         Session session = getSessionFactory().openSession();
         session.saveOrUpdate(user);
         return user;
@@ -307,7 +307,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
     @Transactional
     public void storeConfig(Config config) {
-        getHibernateTemplate().merge(config);
+        getHibernateTemplate().saveOrUpdate(config);
     }
     @Transactional
     public Config loadConfig(String param) {

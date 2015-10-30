@@ -125,7 +125,7 @@ public class Item extends AbstractItem {
         getRelatedItems().add(itemItem);
     }
 
-    /*
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -142,5 +142,4 @@ public class Item extends AbstractItem {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
-    */
 }

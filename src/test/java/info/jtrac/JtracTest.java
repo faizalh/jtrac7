@@ -264,6 +264,7 @@ public class JtracTest extends JtracTestBase {
         i1.setStatus(State.CLOSED);
         i1.addRelated(i0, ItemItem.DEPENDS_ON);
         jtrac.storeItem(i1, null);
+        sessionFactory.getCurrentSession().flush();
         //========================
         Item i2 = new Item();
         i2.setSpace(s);
@@ -273,6 +274,7 @@ public class JtracTest extends JtracTestBase {
         i2.addRelated(i1, ItemItem.DUPLICATE_OF);
         jtrac.storeItem(i2, null);
         assertEquals(3, jtrac.loadCountOfHistoryInvolvingUser(u));
+        sessionFactory.getCurrentSession().flush();
         // can we remove i1?
         Item temp = jtrac.loadItem(i1.getId());
         jtrac.removeItem(temp);
