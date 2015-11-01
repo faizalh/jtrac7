@@ -35,13 +35,13 @@ public abstract class JtracTestBase extends AbstractTransactionalJUnit4SpringCon
         this.jtrac = jtrac;
     }
     
-    protected String[] getConfigLocations() {
-
-        return new String[] {
-            "file:src/main/webapp/WEB-INF/applicationContext.xml",
-//            "file:src/main/webapp/WEB-INF/applicationContext-lucene.xml"
-        };
-    }
+//    protected String[] getConfigLocations() {
+//
+//        return new String[] {
+//            "file:src/main/webapp/WEB-INF/applicationContext.xml",
+////            "file:src/main/webapp/WEB-INF/applicationContext-lucene.xml"
+//        };
+//    }
 
 
     

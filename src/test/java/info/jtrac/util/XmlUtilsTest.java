@@ -1,16 +1,21 @@
 package info.jtrac.util;
 
-import junit.framework.TestCase;
 import org.dom4j.Document;
+import org.junit.Test;
 
-public class XmlUtilsTest extends TestCase {
-    
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+public class XmlUtilsTest {
+
+    @Test
     public void testXmlStringParse() {
         String s = "<test/>";
         Document d = XmlUtils.parse(s);
         assertTrue(d.getRootElement().getName().equals("test"));
     }
-    
+
+    @Test
     public void testBadXmlParseFails() {
         String s = "foo";
         try {
@@ -20,7 +25,8 @@ public class XmlUtilsTest extends TestCase {
             // expected
         }        
     }
-    
+
+    @Test
     public void testGetAsPrettyXml() {
         String s = "<root><node1><node2>data</node2></node1></root>";
         String result = XmlUtils.getAsPrettyXml(s);

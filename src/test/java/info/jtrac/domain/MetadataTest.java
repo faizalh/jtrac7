@@ -1,13 +1,15 @@
 package info.jtrac.domain;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class MetadataTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class MetadataTest {
     
     private Metadata getMetadata() {
         Metadata metadata = new Metadata();

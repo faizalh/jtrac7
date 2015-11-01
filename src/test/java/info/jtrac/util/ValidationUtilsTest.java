@@ -1,16 +1,21 @@
 package info.jtrac.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ValidationUtilsTest extends TestCase {
-    
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class ValidationUtilsTest  {
+
+    @Test
     public void testUpperCase() {
         assertTrue(ValidationUtils.isAllUpperCase("ABCD"));
         assertTrue(ValidationUtils.isAllUpperCase("AB123CD"));
         assertFalse(ValidationUtils.isAllUpperCase("ABCD-ABCD"));
         assertFalse(ValidationUtils.isAllUpperCase("AB CD"));        
     }
-    
+
+    @Test
     public void testValidLoginName() {
         assertTrue(ValidationUtils.isValidLoginName("abcd"));
         assertTrue(ValidationUtils.isValidLoginName("abcd123"));
@@ -25,7 +30,8 @@ public class ValidationUtilsTest extends TestCase {
         assertFalse(ValidationUtils.isValidLoginName("ab:cd"));
         assertFalse(ValidationUtils.isValidLoginName("ab cd"));
     }
-    
+
+    @Test
     public void testCamelDashCase() {
         assertTrue(ValidationUtils.isCamelDashCase("Abcd"));
         assertTrue(ValidationUtils.isCamelDashCase("Abcd-Efgh"));

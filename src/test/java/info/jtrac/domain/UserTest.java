@@ -1,15 +1,18 @@
 package info.jtrac.domain;
 
 
-import junit.framework.TestCase;
 import org.springframework.security.core.GrantedAuthority;
-
+import org.junit.Test;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class UserTest extends TestCase {    
-    
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class UserTest {
+
+    @Test
     public void testGetAuthoritiesFromUserSpaceRoles() {      
         
         Space s1 = new Space();

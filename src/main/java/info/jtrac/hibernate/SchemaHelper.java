@@ -45,7 +45,6 @@ public class SchemaHelper {
     private String password;
     private String hibernateDialect;
     private String dataSourceJndiName;
-    private String[] mappingResources;
 
     public void setDriverClassName(String driverClassName) {
         this.driverClassName = driverClassName;
@@ -53,10 +52,6 @@ public class SchemaHelper {
 
     public void setHibernateDialect(String hibernateDialect) {
         this.hibernateDialect = hibernateDialect;
-    }
-
-    public void setMappingResources(String[] mappingResources) {
-        this.mappingResources = mappingResources;
     }
 
     public void setUrl(String url) {
@@ -79,21 +74,7 @@ public class SchemaHelper {
      * create tables using the given Hibernate configuration
      */
     public void createSchema() {
-        Configuration cfg = new Configuration();
-        if (StringUtils.hasText(dataSourceJndiName)) {
-            cfg.setProperty("hibernate.connection.datasource", dataSourceJndiName);
-        } else {
-            cfg.setProperty("hibernate.connection.driver_class", driverClassName);
-            cfg.setProperty("hibernate.connection.url", url);
-            cfg.setProperty("hibernate.connection.username", username);
-            cfg.setProperty("hibernate.connection.password", password);
-        }
-        cfg.setProperty("hibernate.dialect", hibernateDialect);
-        for (String resource : mappingResources) {
-            cfg.addResource(resource);
-        }
         logger.info("begin database schema creation =========================");
-        //new SchemaUpdate(cfg).execute(true, true);
         MetadataImplementor metadataImplementor = buildMetadataImplementor();
         new SchemaUpdate(metadataImplementor).execute(true, true);
 
@@ -112,11 +93,7 @@ public class SchemaHelper {
 
     private MetadataImplementor buildMetadataImplementor() {
         MetadataSources sources = new MetadataSources();
-        /*
-        for (String resource: mappingResources) {
-            sources.addResource(resource);
-        }
-        */
+
         sources.addAnnotatedClassName("info.jtrac.domain.User").
                 addAnnotatedClassName("info.jtrac.domain.Attachment").
                 addAnnotatedClassName("info.jtrac.domain.ColumnHeading").

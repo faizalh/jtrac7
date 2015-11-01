@@ -1,9 +1,12 @@
 package info.jtrac.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ItemUtilsTest extends TestCase {
-    
+import static org.junit.Assert.assertEquals;
+
+public class ItemUtilsTest {
+
+    @Test
     public void testHtmlEscaping() {
         assertEquals("&nbsp;&nbsp;&nbsp;&nbsp;", ItemUtils.fixWhiteSpace("    "));
         assertEquals("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", ItemUtils.fixWhiteSpace(" \t"));

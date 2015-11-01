@@ -1,18 +1,23 @@
 package info.jtrac.domain;
 
 import info.jtrac.util.XmlUtils;
-import junit.framework.TestCase;
+import org.junit.Test;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
-public class FieldTest extends TestCase {
-    
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+public class FieldTest{
+
+    @Test
     public void testSetValidName() {
         Field field = new Field();
         field.setName("cusInt01");
         assertEquals(field.getName().toString(), "cusInt01");        
     }
-    
+
+    @Test
     public void testSetInValidNameFails() {
         Field field = new Field();
         try {
@@ -22,7 +27,8 @@ public class FieldTest extends TestCase {
             // expected
         }        
     }    
-    
+
+    @Test
     public void testConstructFromXml() {
         Document d = XmlUtils.parse("<field name='cusInt01' label='Test Label'/>");
         Field field = new Field(d.getRootElement());
@@ -30,13 +36,15 @@ public class FieldTest extends TestCase {
         assertEquals("Test Label", field.getLabel());
         assertEquals(field.isOptional(), false);
     }
-    
+
+    @Test
     public void testConstructFromXmlWithOptionalAttribute() {
         Document d = XmlUtils.parse("<field name='cusInt01' label='Test Label' optional='true'/>");
         Field field = new Field(d.getRootElement());
         assertTrue(field.isOptional());
     }
-    
+
+    @Test
     public void testGetAsXml() {
         Field field = new Field();
         field.setName("cusInt01");

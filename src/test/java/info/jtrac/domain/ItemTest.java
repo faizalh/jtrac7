@@ -1,9 +1,10 @@
 package info.jtrac.domain;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+public class ItemTest {
 
-public class ItemTest extends TestCase {
-
+    @Test
     public void testSetAndGetForCustomInteger() {
         Item item = new Item();
         item.setCusInt01(5);

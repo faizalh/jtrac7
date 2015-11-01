@@ -1,18 +1,22 @@
 package info.jtrac.lucene;
 
 import info.jtrac.domain.Item;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.Ignore;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.io.File;
 import java.util.List;
 
-public class IndexSearcherTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+// IndexSercher is deprecated in favour of hibernate's search feature
+// the class and test will be modified or removed to reflect this.
+public class IndexSearcherTest {
     
     private ApplicationContext context;
     
-    @Override
+    @Ignore
     public void setUp() {
         File home = new File("target/home");
         if (!home.exists()) {
@@ -29,7 +33,8 @@ public class IndexSearcherTest extends TestCase {
         System.setProperty("jtrac.home", home.getAbsolutePath());
         context = new FileSystemXmlApplicationContext("src/main/webapp/WEB-INF/applicationContext-lucene.xml");    
     }
-    
+
+    @Ignore
     public void testFindItemIdsBySearchingWithinSummaryAndDetailFields() throws Exception {       
         Item item = new Item();
         item.setId(1L);

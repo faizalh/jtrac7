@@ -1,8 +1,7 @@
 package info.jtrac.svn;
 
-import junit.framework.TestCase;
 
-public class SvnTest extends TestCase {
+public class SvnTest {
     
     public void testNothing() {
         

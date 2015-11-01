@@ -12,7 +12,7 @@
     <!-- custom Configurer that extends the spring PropertyPlaceholderConfigurer -->
     <bean class="info.jtrac.config.JtracConfigurer"/>        
 
-    <!-- this Acegi helper finds its way into our root Spring context 
+    <!-- this helper finds its way into our root Spring context
          because JtracImpl depends on it -->
     <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
 
@@ -32,35 +32,7 @@
         <property name="releaseTimestamp" value="${jtrac.timestamp}"/>
         <property name="jtracHome" value="${jtrac.home}"/>
     </bean>
-    
-    <!-- the business service tier / facade is behind an AOP interceptor (see "target" property)
-         only the update operations require transactions across multiple dao update operations -->
-    <!--bean id="jtrac" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager" ref="transactionManager"/>        
-        <property name="target">            
-            <bean class="info.jtrac.JtracImpl" init-method="init">
-                <property name="dao" ref="dao"/>
-                <property name="passwordEncoder" ref="passwordEncoder"/>
-                <property name="indexer" ref="indexer"/>
-                <property name="indexSearcher" ref="indexSearcher"/>
-                <property name="messageSource" ref="messageSource"/>
-                <property name="localeList" value="${jtrac.locales}"/>
-                <property name="releaseVersion" value="${jtrac.version}"/>
-                <property name="releaseTimestamp" value="${jtrac.timestamp}"/>
-                <property name="jtracHome" value="${jtrac.home}"/>
-            </bean>
-        </property>        
-        <property name="transactionAttributes">
-            <props>                
-                <prop key="store*">PROPAGATION_REQUIRED</prop>
-                <prop key="update*">PROPAGATION_REQUIRED</prop>
-                <prop key="remove*">PROPAGATION_REQUIRED</prop>                
-                <prop key="bulkUpdate*">PROPAGATION_REQUIRED</prop>
-                <prop key="*">PROPAGATION_SUPPORTS,readOnly</prop>
-            </props>
-        </property>        
-    </bean-->
-    
+
     <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
@@ -82,7 +54,6 @@
     <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="packagesToScan" value="info.jtrac.domain"/>
-        <!--property name="mappingResources" value="jtrac.hbm.xml"/-->
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>        
@@ -98,16 +69,12 @@
         <property name="hibernateTemplate">
             <bean class="org.springframework.orm.hibernate5.HibernateTemplate">
                 <property name="sessionFactory" ref="sessionFactory"/>
-                <!--property name="flushMode">
-                    <bean id="org.springframework.orm.hibernate4.HibernateAccessor.FLUSH_COMMIT"
-                        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>                    
-                </property-->
             </bean>
         </property>        
         <!-- <property name="sessionFactory" ref="sessionFactory"/> -->
         <property name="schemaHelper">
             <bean class="info.jtrac.hibernate.SchemaHelper">                
-                <property name="mappingResources" value="jtrac.hbm.xml"/>
+                <!--property name="mappingResources" value="jtrac.hbm.xml"/-->
                 <property name="driverClassName" value="${database.driver}"/>
                 <property name="url" value="${database.url}"/>
                 <property name="username" value="${database.username}"/>

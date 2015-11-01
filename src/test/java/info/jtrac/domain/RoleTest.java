@@ -1,11 +1,15 @@
 package info.jtrac.domain;
 
 import info.jtrac.util.XmlUtils;
-import junit.framework.TestCase;
+import org.junit.Test;
 import org.dom4j.Document;
 
-public class RoleTest extends TestCase {
-    
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class RoleTest {
+
+    @Test
     public void testConstructFromXml() {
         Document d = XmlUtils.parse("<role name='TESTER'>" +
             "<state status='1'>" +

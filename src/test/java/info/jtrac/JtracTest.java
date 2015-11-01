@@ -2,11 +2,9 @@ package info.jtrac;
 
 import info.jtrac.domain.*;
 import info.jtrac.util.ItemUtils;
-import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.test.context.transaction.TestTransaction;
 
 import java.util.*;
 
@@ -103,8 +101,8 @@ public class JtracTest extends JtracTestBase {
         
         List<User> users2 = jtrac.findUsersForSpace(space.getId());
         assertEquals(1, users2.size());
-        
     }
+
     @Test
     public void testConfigStoreAndLoad() {
         Config config = new Config("testParam", "testValue");
@@ -112,6 +110,7 @@ public class JtracTest extends JtracTestBase {
         String value = jtrac.loadConfig("testParam");
         assertEquals("testValue", value);
     }
+
     @Test
     public void testStoreAndLoadUserWithAdminRole() {
         User user = new User();
@@ -131,6 +130,7 @@ public class JtracTest extends JtracTestBase {
         assertTrue(set.contains("ROLE_ADMIN"));
         
     }
+
     @Test
     public void testDefaultAdminUserHasAdminRole() {
         UserDetails ud = jtrac.loadUserByUsername("admin");
@@ -142,6 +142,7 @@ public class JtracTest extends JtracTestBase {
         assertTrue(set.contains("ROLE_USER"));
         assertTrue(set.contains("ROLE_ADMIN"));
     }
+
     @Test
     public void testItemInsertAndCounts() {
         Space s = getSpace();
@@ -168,6 +169,7 @@ public class JtracTest extends JtracTestBase {
         assertEquals(1, c.getAssignedToMe());
         assertEquals(1, c.getTotal());
     }
+
     @Test
     public void testRemoveSpaceRoleDoesNotOrphanDatabaseRecord() {
         Space space = getSpace();
@@ -181,21 +183,11 @@ public class JtracTest extends JtracTestBase {
         UserSpaceRole usr = jtrac.loadUserSpaceRole(id);
         assertEquals(spaceId, usr.getSpace().getId().longValue());
         jtrac.removeUserSpaceRole(usr);
-        //FH Might not be allowed to have the following in the updated TransactionalSpringJUnit as only one transaction allowed(?)
-        //endTransaction();
-        //Integer result = jdbcTemplate.queryForObject("select count(0) from user_space_roles where space_id = " + spaceId, Integer.class);
-        //assertEquals(0,result.intValue());
-       // TestTransaction.flagForCommit();
-        //TestTransaction.end();
-        //assertFalse(TestTransaction.isActive());
-        ////TestTransaction.start();
         sessionFactory.getCurrentSession().flush();
         Integer result = jdbcTemplate.queryForObject("select count(0) from user_space_roles where space_id = " + spaceId, Integer.class);
         assertEquals(0,result.intValue());
-
-
-
     }
+
     @Test
     public void testFindSpacesWhereGuestAllowed() {
         Space space = getSpace();
@@ -216,6 +208,7 @@ public class JtracTest extends JtracTestBase {
         assertEquals(0, jdbcTemplate.queryForObject("select count(0) from user_space_roles where role_key = 'DEFAULT'", Integer.class).intValue());
         assertEquals(1, jdbcTemplate.queryForObject("select count(0) from user_space_roles where role_key = 'NEWDEFAULT'", Integer.class).intValue());
     }
+
     @Test
     public void testGetItemAsHtmlDoesNotThrowException() {
         Config config = new Config("mail.server.host", "dummyhost");
@@ -238,7 +231,7 @@ public class JtracTest extends JtracTestBase {
         jtrac.storeItem(i, null);
         System.out.println(ItemUtils.getAsXml(i).asXML());
     }
-    //FH Following test not allowed for abstract class Transactional...(?)
+
     @Test
     public void testDeleteItemThatHasRelatedItems() {
         Space s = getSpace();
@@ -279,5 +272,4 @@ public class JtracTest extends JtracTestBase {
         Item temp = jtrac.loadItem(i1.getId());
         jtrac.removeItem(temp);
     }
-    
 }

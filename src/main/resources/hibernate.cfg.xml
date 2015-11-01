@@ -8,7 +8,6 @@
         <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
         <property name="connection.username">sa</property>
         <property name="connection.password"/>
-        <mapping resource="jtrac.hbm.xml"/>
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
     </session-factory>
