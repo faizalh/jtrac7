@@ -67,7 +67,7 @@ public interface Jtrac extends UserDetailsService {
     int bulkUpdateDeleteSpaceRole(Space space, String roleKey);
 
     //========================================================
-    User storeUser(User user);
+    void storeUser(User user);
 
     void storeUser(User user, String password, boolean sendNotifications);
 
@@ -119,6 +119,8 @@ public interface Jtrac extends UserDetailsService {
     UserSpaceRole loadUserSpaceRole(long id);
 
     void removeUserSpaceRole(UserSpaceRole userSpaceRole);
+
+    List<Item> findItemsContainingText(String text);
 
     //========================================================
     void storeMetadata(Metadata metadata);

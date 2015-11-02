@@ -17,6 +17,10 @@
 package info.jtrac.domain;
 
 import info.jtrac.util.DateUtils;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
@@ -27,12 +31,15 @@ import java.util.Date;
  * this contains the fields that are common to both and persisted
  */
 @MappedSuperclass
+//@Indexed
 public abstract class AbstractItem implements Serializable {
 
     protected Long id;
     private Integer version;
     private Item parent; // slightly different meaning for Item and History
+    @org.hibernate.search.annotations.Field(store = Store.NO, analyze = Analyze.YES, name = "summary")
     private String summary;
+    @org.hibernate.search.annotations.Field(store = Store.NO, analyze = Analyze.YES, name = "detail")
     private String detail;
     private User loggedBy;
     private User assignedTo;

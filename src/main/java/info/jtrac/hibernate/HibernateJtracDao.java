@@ -20,6 +20,9 @@ import info.jtrac.JtracDao;
 import info.jtrac.domain.*;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
+import org.hibernate.search.FullTextSession;
+import org.hibernate.search.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate5.HibernateCallback;
@@ -53,7 +56,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
 
     public Item loadItem(long id) {
 
-        return (Item) getHibernateTemplate().get(Item.class, id);
+        return getHibernateTemplate().get(Item.class, id);
     }
 
     public void storeHistory(History history) {
@@ -135,15 +138,15 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
 
     public Space loadSpace(long id) {
 
-        return (Space) getHibernateTemplate().get(Space.class, id);
+        return getHibernateTemplate().get(Space.class, id);
     }
 
     public UserSpaceRole loadUserSpaceRole(long id) {
-        return (UserSpaceRole) getHibernateTemplate().get(UserSpaceRole.class, id);
+        return getHibernateTemplate().get(UserSpaceRole.class, id);
     }
     @Transactional
     public SpaceSequence loadSpaceSequence(long id) {
-        return (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);
+        return getHibernateTemplate().get(SpaceSequence.class, id);
     }
 
     public void storeSpaceSequence(SpaceSequence spaceSequence) {
@@ -170,12 +173,11 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
 
     @Transactional(readOnly = false)
-    public User storeUser(User user) {
+    public void storeUser(User user) {
     //TODO clean me up.
         //getHibernateTemplate().saveOrUpdate(user);
         Session session = getSessionFactory().openSession();
         session.saveOrUpdate(user);
-        return user;
     }
 
     public User loadUser(long id) {
@@ -209,7 +211,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public List<User> findUsersByLoginName(String loginName) {
         //return (List<User>) getHibernateTemplate().find("from User user where user.loginName = ?", loginName);
         Session session = getSessionFactory().openSession();
-        Query query = session.createQuery("from info.jtrac.domain.User user where user.loginName = ?");
+        Query query = session.createQuery("from info.jtrac.domain.User as user where user.loginName = ?");
         query.setParameter(0, loginName);
         List<User> ret = query.list();
         return ret;
@@ -383,18 +385,18 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     @Transactional
     public int bulkUpdateStatusToOpen(Space space, int status) {
         int itemCount = getHibernateTemplate().bulkUpdate("update Item item set item.status = " + State.OPEN
-                + " where item.status = ? and item.space.id = ?", new Object[]{status, space.getId()});
+                + " where item.status = ? and item.space.id = ?", status, space.getId());
         logger.info("no of Item rows where status changed from " + status + " to " + State.OPEN + " = " + itemCount);
         int historyCount = getHibernateTemplate().bulkUpdate("update History history set history.status = " + State.OPEN
                 + " where history.status = ?"
-                + " and history.parent in ( from Item item where item.space.id = ? )", new Object[]{status, space.getId()});
+                + " and history.parent in ( from Item item where item.space.id = ? )", status, space.getId());
         logger.info("no of History rows where status changed from " + status + " to " + State.OPEN + " = " + historyCount);
         return itemCount;
     }
     @Transactional
     public int bulkUpdateRenameSpaceRole(Space space, String oldRoleKey, String newRoleKey) {
         return getHibernateTemplate().bulkUpdate("update UserSpaceRole usr set usr.roleKey = ?"
-                + " where usr.roleKey = ? and usr.space.id = ?", new Object[]{newRoleKey, oldRoleKey, space.getId()});
+                + " where usr.roleKey = ? and usr.space.id = ?", newRoleKey, oldRoleKey, space.getId());
     }
     @Transactional
     public int bulkUpdateDeleteSpaceRole(Space space, String roleKey) {
@@ -402,7 +404,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
             return getHibernateTemplate().bulkUpdate("delete UserSpaceRole usr where usr.space.id = ?", space.getId());
         } else {
             return getHibernateTemplate().bulkUpdate("delete UserSpaceRole usr"
-                    + " where usr.space.id = ? and usr.roleKey = ?", new Object[]{space.getId(), roleKey});
+                    + " where usr.space.id = ? and usr.roleKey = ?", space.getId(), roleKey);
         }
     }
     @Transactional
@@ -443,6 +445,27 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
             return;
         }
         logger.info("database schema exists, normal startup");
+    }
+
+    /**
+     * <p>
+     *     This method uses Hibernate Lucene to perform a text search on Items.
+     * </p>
+     * @param text contains the text to be queried with
+     * @return a List of Item objects that match the query.
+     */
+    @Transactional
+    public List<Item> findItemsContainingText(final String text) {
+        Session session = getSessionFactory().openSession();
+        FullTextSession fullTextSession = Search.getFullTextSession(session);
+
+        QueryBuilder b = fullTextSession.getSearchFactory().buildQueryBuilder().forEntity(Item.class).get();
+        org.apache.lucene.search.Query luceneQuery = b.keyword()
+                                                        .onFields("detail", "summary")
+                                                        .matching(text)
+                                                        .createQuery();
+        org.hibernate.Query fullTextQuery = fullTextSession.createFullTextQuery(luceneQuery, Item.class);
+        return fullTextQuery.list();
     }
 
 }

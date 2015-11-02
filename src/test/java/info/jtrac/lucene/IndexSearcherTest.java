@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 // IndexSercher is deprecated in favour of hibernate's search feature
-// the class and test will be modified or removed to reflect this.
+// the class and test will be modified or removed to reflect this.x
 public class IndexSearcherTest {
     
     private ApplicationContext context;

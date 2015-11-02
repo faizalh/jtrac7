@@ -12,6 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "items")
+@Indexed
 public class Item extends AbstractItem {
 
     private String type;

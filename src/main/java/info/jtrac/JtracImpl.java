@@ -402,8 +402,8 @@ public class JtracImpl implements Jtrac {
         return users.get(0);
     }
 
-    public User storeUser(User user) {
-        return dao.storeUser(user);
+    public void storeUser(User user) {
+        dao.storeUser(user);
     }
 
     public void storeUser(User user, String password, boolean sendNotifications) {
@@ -616,6 +616,11 @@ public class JtracImpl implements Jtrac {
     public List<AbstractItem> findAllItems() {
         // this returns all Item and all History records for indexing
         return dao.findAllItems();
+    }
+
+    @Override
+    public List<Item> findItemsContainingText(String text) {
+        return dao.findItemsContainingText(text);
     }
 
     //========================================================

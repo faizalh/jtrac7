@@ -59,7 +59,7 @@
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>        
                 <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
                 <prop key="hibernate.search.default.directory_provider">filesystem</prop>
-                <prop key="hibernate.search.default.indexBase">"${jtrac.home}/indexes"</prop>
+                <prop key="hibernate.search.default.indexBase">${jtrac.home}/indexes</prop>
             </props>
         </property>
     </bean>

@@ -91,7 +91,7 @@ public interface JtracDao {
     void storeSpaceSequence(SpaceSequence spaceSequence);
 
     //===========================================
-    User storeUser(User user);
+    void storeUser(User user);
 
     User loadUser(long id);
 
@@ -131,5 +131,7 @@ public interface JtracDao {
     void storeConfig(Config config);
 
     Config loadConfig(String key);
+
+    List<Item> findItemsContainingText(String text);
 
 }

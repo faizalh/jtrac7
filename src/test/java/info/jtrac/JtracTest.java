@@ -2,9 +2,11 @@ package info.jtrac;
 
 import info.jtrac.domain.*;
 import info.jtrac.util.ItemUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.context.transaction.TestTransaction;
 
 import java.util.*;
 
@@ -61,7 +63,7 @@ public class JtracTest extends JtracTestBase {
         User user = new User();
         user.setLoginName("test");
         user.setEmail("test@jtrac.com");
-        user = jtrac.storeUser(user);
+        jtrac.storeUser(user);
         User user1 = jtrac.loadUser("test");
         assertTrue(user1.getEmail().equals("test@jtrac.com"));
         User user2 = dao.findUsersByEmail("test@jtrac.com").get(0);
@@ -271,5 +273,41 @@ public class JtracTest extends JtracTestBase {
         // can we remove i1?
         Item temp = jtrac.loadItem(i1.getId());
         jtrac.removeItem(temp);
+    }
+
+    //This test requires the entities to stored and not rollbacked like the other tests
+    // this will cause errors if run more than once on an existing db.
+    // Needs to be run once on an empty db.
+    //@Test
+    public void findItemContainingTextTest() {
+        Space s = getSpace();
+        jtrac.storeSpace(s);
+
+        User u = new User();
+        u.setLoginName("test");
+        u.setEmail("dummy");
+        u.addSpaceWithRole(s, "DEFAULT");
+        jtrac.storeUser(u);
+
+        Item item = new Item();
+        item.setId(1L);
+        item.setSpace(s);
+        item.setAssignedTo(u);
+        item.setLoggedBy(u);
+        item.setStatus(State.OPEN);
+        item.setSummary("this is a test summary");
+        item.setDetail("the quick brown fox jumped over the lazy dogs");
+        jtrac.storeItem(item, null);
+        TestTransaction.flagForCommit();
+        TestTransaction.end();
+        assertFalse(TestTransaction.isActive());
+        TestTransaction.start();
+        List result;
+        result = jtrac.findItemsContainingText("lazy");
+        assertEquals(1, result.size());
+        result = jtrac.findItemsContainingText("foo");
+        assertEquals(0, result.size());
+        result = jtrac.findItemsContainingText("summary");
+        assertEquals(1, result.size());
     }
 }
